@@ -10,8 +10,8 @@
     "lint:scss": "stylelint \"src/**/*.scss\" --fix"
   },
   "devDependencies": {
-    "@spiracss/html-cli": "^0.3.3",
-    "@spiracss/stylelint-plugin": "^0.3.3",
+    "@spiracss/html-cli": "^0.3.4",
+    "@spiracss/stylelint-plugin": "^0.3.4",
     "postcss": "^8.4.49",
     "postcss-scss": "^4.0.9",
     "sass": "^1.83.0",
