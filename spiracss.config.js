@@ -15,9 +15,6 @@ export default {
   },
   stylelint: {
     base: {
-      paths: {
-        components: ['src/components']
-      },
       external: {
         prefixes: ['u-']
       }
