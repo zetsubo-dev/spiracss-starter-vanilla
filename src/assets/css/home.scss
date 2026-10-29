@@ -1,8 +1,8 @@
-@use "@styles/partials/global" as *;
+@use "styles/partials/global" as *;
 
 // Import components used in this page
-@use "@pages/home/HeroSection/HeroSection";
-@use "@parts/CardList/CardList";
+@use "components/pages/home/HeroSection/HeroSection";
+@use "components/parts/CardList/CardList";
 
 .main-container {
   min-height: 100vh;

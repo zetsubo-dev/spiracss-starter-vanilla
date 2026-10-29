@@ -1,26 +1,51 @@
-// SpiraCSS Configuration for Vanilla Starter (Vite)
+// Shared native CSS scope configuration; framework markup adapters are separate.
 export default {
-  aliasRoots: {
-    src: ['src'],
-    components: ['src/components'],
-    styles: ['src/styles'],
-    common: ['src/components/common'],
-    pages: ['src/components/pages'],
-    parts: ['src/components/parts'],
-    assets: ['src/assets']
+  "aliasRoots": {
+    "src": [
+      "src"
+    ],
+    "components": [
+      "src/components"
+    ],
+    "styles": [
+      "src/styles"
+    ],
+    "layouts": [
+      "src/layouts"
+    ],
+    "common": [
+      "src/components/common"
+    ],
+    "pages": [
+      "src/components/pages"
+    ],
+    "parts": [
+      "src/components/parts"
+    ],
+    "assets": [
+      "src/assets"
+    ]
   },
-  fileCase: {
-    root: 'pascal',
-    child: 'kebab'
+  "fileCase": {
+    "root": "pascal",
+    "child": "kebab"
   },
-  stylelint: {
-    base: {
-      external: {
-        prefixes: ['u-']
+  "stylelint": {
+    "base": {
+      "external": {
+        "prefixes": [
+          "u-"
+        ]
       }
     }
   },
-  generator: {
-    layoutMixins: ['@include breakpoint-up(md)']
+  "generator": {
+    "scssRootStyle": "scope-explicit",
+    "globalScssModule": "styles/partials/global",
+    "pageEntryAlias": "assets",
+    "pageEntrySubdir": "css",
+    "layoutMixins": [
+      "@include breakpoint-up(md)"
+    ]
   }
 }

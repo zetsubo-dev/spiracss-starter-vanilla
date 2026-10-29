@@ -1,4 +1,4 @@
-@use "@styles/partials/global" as *;
+@use "styles/partials/global" as *;
 
 // About content SCSS is generated from src/about/index.html.
 
@@ -13,6 +13,6 @@
 
   > .site-footer {
     // @common/SiteFooter/SiteFooter.scss
-    margin-top: 3rem;
+    margin-top: 4rem;
   }
 }

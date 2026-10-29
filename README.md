@@ -1,108 +1,61 @@
-# Vite Simple (SpiraCSS Starter)
+# spiracss-starter-vanilla
 
-A minimal sample to try the basic SpiraCSS setup with vanilla Vite (no framework).
+A SpiraCSS 0.5.0 sample using native CSS `@scope`, not framework-generated scoping.
 
-## Requirements
+## Runtime and setup
 
-- Node.js 20+ (recommended)
+Use Node.js **24.22.2 (24 LTS)** and npm **11.19.1** (`.node-version` / `.nvmrc`). Versions are exact and dependencies are locked.
 
-## Setup
-
-```bash
-npm install
+```sh
+npm ci
+npm run verify:scss
+npm run lint:scss
+npm run build
+npm run audit:dependencies
 ```
 
-## Initial setup
+Run `npm run dev` to browse `/` and `/about/`. The home page is styled; About intentionally remains HTML-first for generation practice.
 
-The following settings are already configured in this sample:
+## Portable SCSS contract
 
-1. `spiracss.config.js` (aliasRoots / generator / selectorPolicy)
-2. `stylelint.config.js` with `@spiracss/stylelint-plugin` enabled
-3. `vite.config.js` aliases aligned with `spiracss.config.js`
+The 33 files under `src/components/`, `src/styles/`, and `src/assets/css/` are identical across all seven samples. Framework markup is not shared and does not own style isolation.
 
-### VS Code Extensions (Install Separately)
+```scss
+@use "styles/partials/global" as *;
+@use "sass:meta";
 
-If not installed, please install the following extensions:
-
-- **SpiraCSS HTML to SCSS**
-  - [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=spiracss.spiracss-html-to-scss)
-  - [Open VSX](https://open-vsx.org/extension/spiracss/spiracss-html-to-scss)
-- **SpiraCSS Comment Links**
-  - [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=spiracss.spiracss-comment-links)
-  - [Open VSX](https://open-vsx.org/extension/spiracss/spiracss-comment-links)
-
-## Dev Server
-
-```bash
-npm run dev
+@scope (.hero-section) {
+  :scope {
+    @include meta.load-css("scss");
+    > .hero-title { /* parent-owned placement */ }
+  }
+}
 ```
 
-## Goals
+Only component root files use `@scope`. Meta-loaded child Blocks under `scss/` retain class selectors; do not scope them or move the root include outside `:scope`. Neither CSS Modules nor Vue/Astro-generated selector attributes are needed. This requires browsers that support CSS `@scope`. Global resets/tokens and page placement remain separate from component ownership.
 
-- The top page is already styled, so you can verify data-mode variant/state
-- The About page is HTML-only, so you can try the SCSS generation flow
+Vite builds external Sass entries; HTML uses literal classes.
 
-## Structure
+Sass resolves the same bare imports from `src`; framework-specific aliases remain only for markup integration. `generator.scssRootStyle` is explicitly `scope-explicit`. `npm run verify:scss` checks the shared source manifest, root/child policy, and absence of framework-scoped source. Changes to shared SCSS must be synchronized across samples and the manifest updated deliberately.
 
-- `src/index.html`
-  - Styled page (Vite MPA)
-  - Includes examples of `data-variant` / `data-state` / `aria-*`
-- `src/about/index.html`
-  - HTML-only page (generate SCSS from here)
-- `src/assets/css/home.scss` / `src/assets/css/about.scss`
-  - Page entry SCSS
-- `src/assets/css/common.scss`
-  - Common component entry (loaded on all pages)
-- `src/assets/css/global.scss`
-  - Global styles shared across all pages (reset/base/utility/tokens)
-- `spiracss.config.js`
-  - SpiraCSS configuration (shared by HTML CLI / Stylelint)
-- `spiracss-ai-agent-doc.md`
-  - AI guide (rules and decision criteria)
+## HTML-first practice and AI
 
-## SCSS Generation Flow
+Select the `<main class="about-flow">...</main>` fragment on the About page and run **Generate SpiraCSS SCSS from Root** or the HTML CLI. Add the generated component with `@use` to `src/assets/css/about.scss`. Keep child files class-based. Read `spiracss-ai-agent-doc.md` first; the full reference is optional. Both are synchronized from the official site at v0.5.0.
 
-Since `src/about/index.html` contains shared header/footer, generating from the entire file as Root may include unrelated blocks.
-Select `<main class="about-flow"> ... </main>` to generate.
-For manual work, use the VS Code extension. For AI usage, you can base your flow on the HTML CLI.
+## Dependency security
 
-### Notes (Vanilla Vite)
+Install-time lifecycle scripts are disabled in `.npmrc`; do not disable that protection globally to fix a build. Builds are explicit `npm run build` operations. If a future native dependency needs an install step, inspect that exact package and approve a targeted rebuild.
 
-- Vanilla Vite has no component system, so common parts like header/footer are duplicated in HTML in this sample.
-- SCSS generation outputs to the directory where the original HTML file is located by default (common behavior for VS Code extension / `spiracss-html-to-scss`).
-  - Generating from `src/about/index.html` outputs to `src/about/`.
+Use `npm ci` for the committed lockfile and run `npm run audit:dependencies` for development and production dependencies. Do not use `npm audit fix --force`, suppress advisories, or add speculative overrides. A clean audit is evidence about known advisories at check time, not a guarantee against unknown or supply-chain compromise.
 
-### VS Code (Manual)
+The Next.js samples use Next **16.4.3** / React **19.3.1**, including the October 2026 fixes. See [official Next.js security guidance](https://nextjs.org/blog/nextjs-security-update-october-14-2026). Recheck advisories before publishing. These changes do not publish npm packages or deploy the sample.
 
-The VS Code extension cannot specify an output directory and always outputs next to the original HTML.
+See [SECURITY.md](SECURITY.md) for the verification date, exact remaining findings, and security overrides.
 
-#### Recommended (for vanilla Vite): Generate first, then move
+## Visual parity verification
 
-1. Open `src/about/index.html` and select `<main class="about-flow"> ... </main>`
-2. Run `Generate SpiraCSS SCSS from Root`
-3. Files like the following are generated next to `src/about/index.html`:
-   - `src/about/AboutFlow.scss`
-   - `src/about/scss/*` (and `src/about/scss/index.scss`)
-4. Move the generated root SCSS and `scss/` directory together to `src/components/` (keep root and scss at the same level):
-   - `src/components/pages/about/AboutFlow/AboutFlow.scss`
-   - `src/components/pages/about/AboutFlow/scss/*`
-5. Open `src/components/pages/about/AboutFlow/AboutFlow.scss` and fix the entry comment at the top if needed:
-   - If it says `// @assets/css/index.scss`, change it to `// @assets/css/about.scss`
-6. Wire from page entry `src/assets/css/about.scss`:
-   - Add `@use "@pages/about/AboutFlow/AboutFlow";`
-   - Add placement rule (example):
+The six runnable samples intentionally share the same Home/About content and rendered component placement. SCSS hashes and lint alone do not prove equal rendering.
 
-     ```scss
-     > .about-flow {
-       // @pages/about/AboutFlow/AboutFlow.scss
-     }
-     ```
-7. Run `npm run lint:scss` and adjust according to Stylelint instructions
+On 2026-10-29, full-page PNG captures matched byte-for-byte across all six production builds in Chromium at desktop 1366×900 DPR1 and mobile 390×844 DPR1 (mobile UA). Fonts were loaded and animations finished before capture. No image masks or pixel-difference tolerance were used.
 
-## Checkpoints
-
-- Top page (`index.html`)
-  - `data-variant` / `data-state` / `aria-selected` are separated in SCSS
-  - Page layer wiring (`@rel` comments) is visible
-- About page
-  - SCSS can be generated from HTML
+Repeat that comparison after changing markup, copy, style loading or SCSS. Check both routes at the same viewport, browser and stable animation state. This result does not establish parity in other browser engines or for every viewport.

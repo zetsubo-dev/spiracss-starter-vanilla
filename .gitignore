@@ -27,3 +27,13 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+
+.cache/
+
+.next/
+
+.nuxt/
+
+.output/
+
+*.tsbuildinfo

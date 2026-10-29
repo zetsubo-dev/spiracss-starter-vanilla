@@ -1,4 +1,4 @@
-@use "@styles/partials/global" as *;
+@use "styles/partials/global" as *;
 
 // @rel/../SiteFooter.scss
 
@@ -9,9 +9,8 @@
     gap: 1rem 1.5rem;
 
     > .item {
-      > a {
+      > .link {
         font-weight: 600;
-        color: #e2e8f0;
         text-decoration: none;
       }
     }
@@ -23,7 +22,8 @@
   @at-root & {
     > .list {
       > .item {
-        > a {
+        > .link {
+          color: #e2e8f0;
           transition: color 0.2s $ease;
 
           &:hover {
